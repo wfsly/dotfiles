@@ -11,3 +11,6 @@
 	quotepath = false
 [push]
 	default = current
+[user]
+	name = wfsly
+	email = 451478064@qq.com
