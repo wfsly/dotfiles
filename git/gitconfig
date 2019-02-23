@@ -1,0 +1,13 @@
+[alias]
+	bc = branch
+	ck = checkout
+	cm = commit
+	df = icdiff
+	ft = fetch
+	ps = push
+	pl = pull
+	st = status
+[core]
+	quotepath = false
+[push]
+	default = current

@@ -1,0 +1,223 @@
+" Basic vim setup
+"
+" Display related
+"
+" Enable syntax highlighting 
+syntax on
+" Enable line numbers, to display a line number in front of every line
+set number
+" Be able to see what mode you are in
+set showmode
+" Highlight current line
+" set cursorline
+" Highlight current column
+" set cursorcolumn
+" Enable ruler to display the cursor position in the lower right corner of the
+" Window
+set ruler 
+
+set colorcolumn=119
+
+" store 2000 history commands
+set history=2000
+
+" Switch off the Vi-compatibility
+set nocompatible
+
+" Enhance command-line completion
+set wildmenu
+
+" Ignore compiled files
+set wildignore=*.o,*~,*.pyc
+
+" Set to auto read when a file is changed from the outside
+set autoread
+
+" Allow backspace in insert mode
+set backspace=indent,eol,start
+
+" tab setup
+set tabstop=4
+set shiftwidth=4
+
+" indent
+set autoindent
+set smartindent
+
+" Add the g flag to search/replace by default
+set gdefault
+
+filetype on
+filetype plugin on
+filetype indent on
+filetype plugin indent on
+
+" 打开自动定位到最后编辑的位置, 需要确认 .viminfo 当前用户可写
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+endif
+
+" 保存python文件时删除多余空格
+fun! <SID>StripTrailingWhitespaces()
+    let l = line(".")
+    let c = col(".")
+    %s/\s\+$//e
+    call cursor(l, c)
+endfun
+autocmd FileType c,cpp,java,go,php,javascript,puppet,python,rust,twig,xml,yml,perl autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
+
+" 分屏窗口移动, Smart way to move between windows
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+
+
+" Author: Jax Wang
+" Vundle setup
+"
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+" YouCompleteMe
+Plugin 'Valloric/YouCompleteMe'
+
+" NerdTree
+Plugin 'scrooloose/nerdtree'
+
+" vim-airline
+Plugin 'vim-airline/vim-airline' 
+Plugin 'vim-airline/vim-airline-themes'
+
+" Syntastic, Syntax checking hacks for vim
+Plugin 'scrooloose/syntastic'
+
+" Delimitmate provides insert mode auto-completion for quotes, parens, brackets, etc.
+Plugin 'raimondi/delimitmate'
+
+" vim-indent-guides visually displaying indent levels in code
+" Plugin 'nathanaelkane/vim-indent-guides'
+
+" indent-line
+Plugin 'yggdroot/indentline'
+
+" solarized colors
+Plugin 'altercation/vim-colors-solarized'
+
+" autopep8
+Plugin 'tell-k/vim-autopep8'
+
+" vim-go
+Plugin 'fatih/vim-go'
+
+" Rainbow Parentheses Improved, shorter code, no level limit, smooth and fast, powerful configuration.
+Plugin 'luochen1990/rainbow'
+
+" The following are examples of different formats supported.
+" Keep Plugin commands between vundle#begin/end.
+" plugin on GitHub repo
+" Plugin 'tpope/vim-fugitive'
+" plugin from http://vim-scripts.org/vim/scripts.html
+" Plugin 'L9'
+" Git plugin not hosted on GitHub
+" Plugin 'git://git.wincent.com/command-t.git'
+" git repos on your local machine (i.e. when working on your own plugin)
+" Plugin 'file:///home/gmarik/path/to/plugin'
+" The sparkup vim script is in a subdirectory of this repo called vim.
+" Pass the path to set the runtimepath properly.
+" Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
+" Install L9 and avoid a Naming conflict if you've already installed a
+" different version somewhere else.
+" Plugin 'ascenator/L9', {'name': 'newL9'}
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+" To ignore plugin indent changes, instead use:
+"filetype plugin on
+"
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
+"
+" end Vundle setup
+
+
+" NERDTree setup
+" Open a NERDTree automatically when vim starts up
+" autocmd vimenter * NERDTree
+"close vim if the only window left open is a NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" map shortcut Ctrl+n to open NERDTree
+map <C-n> :NERDTreeToggle<CR>
+" open NERDTree automatically when vim starts up on opening a directory
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
+" end NERDTree setup
+
+" vim-airline setup
+let g:airline_theme='simple'
+" end vim-airline setup
+
+" solarized color setup
+" syntax enable
+" set background=dark
+" colorscheme solarized
+" end solarized color setup
+
+" vim-autopep8 setup
+let g:autopep8_max_line_length=119
+" map it to F8
+autocmd FileType python noremap <buffer> <F8> :call Autopep8()<CR>
+" let g:autopep8_disable_show_diff=1
+" end vim-autopep8 setup
+"
+
+" Syntastic setup
+let g:syntastic_python_checkers = ['pylint']
+
+" Rainbow setup
+" active rainbow, 0 if you want to enable it later via :RainbowToggle
+let g:rainbow_active = 1
+let g:rainbow_conf = {
+\	'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick'],
+\	'ctermfgs': ['lightblue', 'lightyellow', 'lightcyan', 'lightmagenta'],
+\	'operators': '_,_',
+\	'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
+\	'separately': {
+\		'*': {},
+\		'tex': {
+\			'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/'],
+\		},
+\		'lisp': {
+\			'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick', 'darkorchid3'],
+\		},
+\		'vim': {
+\			'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=vimFuncBody', 'start=/\[/ end=/\]/ containedin=vimFuncBody', 'start=/{/ end=/}/ fold containedin=vimFuncBody'],
+\		},
+\		'html': {
+\			'parentheses': ['start=/\v\<((area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)[ >])@!\z([-_:a-zA-Z0-9]+)(\s+[-_:a-zA-Z0-9]+(\=("[^"]*"|'."'".'[^'."'".']*'."'".'|[^ '."'".'"><=`]*))?)*\>/ end=#</\z1># fold'],
+\		},
+\		'css': 0,
+\	}
+\}
+
+" YouCompleteMe setup
+" python with virtualenv support
+" let g:ycm_python_binary_path = 'python2'
+let g:ycm_python_binary_path = 'python'
+" end YouCompleteMe setup
